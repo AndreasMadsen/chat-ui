@@ -1,4 +1,5 @@
 import { HF_ACCESS_TOKEN, MODELS, OLD_MODELS } from "$env/static/private";
+import { trimSuffix } from "$lib/utils/trimSuffix";
 import { z } from "zod";
 
 const modelsRaw = z
@@ -52,6 +53,10 @@ const modelsRaw = z
 export const models = await Promise.all(
 	modelsRaw.map(async (m) => ({
 		...m,
+		endpoints: (m.endpoints || []).map((e) => ({
+			...e,
+			url: trimSuffix(e.url, '/generate_stream'),
+		})),
 		id: m.id || m.name,
 		displayName: m.displayName || m.name,
 		preprompt: m.prepromptUrl ? await fetch(m.prepromptUrl).then((r) => r.text()) : m.preprompt,
