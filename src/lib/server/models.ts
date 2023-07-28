@@ -15,9 +15,11 @@ const modelsRaw = z
 			modelUrl: z.string().url().optional(),
 			datasetName: z.string().min(1).optional(),
 			datasetUrl: z.string().url().optional(),
-			userMessageToken: z.string().min(1),
-			assistantMessageToken: z.string().min(1),
-			messageEndToken: z.string().min(1).optional(),
+			userMessageToken: z.string(),
+			userMessageEndToken: z.string().default(""),
+			assistantMessageToken: z.string(),
+			assistantMessageEndToken: z.string().default(""),
+			messageEndToken: z.string().default(""),
 			preprompt: z.string().default(""),
 			prepromptUrl: z.string().url().optional(),
 			promptExamples: z
@@ -53,6 +55,8 @@ const modelsRaw = z
 export const models = await Promise.all(
 	modelsRaw.map(async (m) => ({
 		...m,
+		userMessageEndToken: m?.userMessageEndToken || m?.messageEndToken,
+		assistantMessageEndToken: m?.assistantMessageEndToken || m?.messageEndToken,
 		endpoints: (m.endpoints || []).map((e) => ({
 			...e,
 			url: trimSuffix(e.url, '/generate_stream'),
