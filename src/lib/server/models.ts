@@ -20,6 +20,7 @@ const modelsRaw = z
 			assistantMessageToken: z.string(),
 			assistantMessageEndToken: z.string().default(""),
 			messageEndToken: z.string().default(""),
+			trimPrompt: z.boolean().default(false),
 			preprompt: z.string().default(""),
 			prepromptUrl: z.string().url().optional(),
 			promptExamples: z

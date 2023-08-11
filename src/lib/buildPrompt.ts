@@ -13,7 +13,7 @@ export async function buildPrompt(
 	model: BackendModel,
 	webSearchId?: string
 ): Promise<string> {
-	const prompt =
+	let prompt =
 		messages
 			.map((m) => (
 				m.from === "user" ? (
@@ -27,6 +27,10 @@ export async function buildPrompt(
 				)
 			))
 			.join("") + model.assistantMessageToken;
+
+	if (model.trimPrompt) {
+		prompt = prompt.trimEnd();
+	}
 
 	let webPrompt = "";
 
